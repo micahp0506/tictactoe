@@ -2,7 +2,7 @@
 ;(function () {
     'use strict';
 
-
+    // Variables to handle the form inputs
     let p0;
     let p1;
     let p2;
@@ -17,10 +17,22 @@
     const ws = io.connect();
     const form = document.querySelector('form');
 
+    // Listening for the socket connection
     ws.on('connect', (socket) => {
-        console.log('socket connected');
+        console.log('socket connected', socket);
     });
 
+    // Receives the passed array/object for the socket from server.js, then calls function to display the current result
+    ws.on('receiveTurn', array => {
+        displayGrid(array);
+    });
+
+    // Receives the win notice from server.js, then alerts the players to the winner
+    ws.on('winNotice', status => {
+        alert(status);
+    });
+
+    // Form that handles the inputs, sends the inputs to the server.js to have sent over socket, then checks for winner and prevents the from doing the default features
     form.addEventListener('submit', () => {
 
         if (player === "") {
@@ -50,48 +62,41 @@
         gameArray.push(p7);
         p8 = document.querySelector('input[name="8"]').value;
         gameArray.push(p8);
-        console.log("p0", p0);
-        console.log("p1", p1);
-        console.log("p2", p2);
-        console.log("p3", p3);
-        console.log("p4", p4);
-        console.log("p5", p5);
-        console.log("p6", p6);
-        console.log("p7", p7);
-        console.log("p8", p8);
-        console.log("gameArray", gameArray);
+        ws.emit('playTurn', gameArray);
         winCheck(gameArray);
         event.preventDefault();
     });
 
+    // Checks to see if the game has a winner
     function winCheck (game) {
+        console.log("wincheck");
         for (let i = 0; i < game.length; i++) {
             if (game[0] === `${player}` && game[1] === `${player}` && game[2] === `${player}`) {
-                alert( `${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else if (game[3] === `${player}` & game[4] === `${player}` & game[5] === `${player}`) {
-                alert(`${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else if (game[6] === `${player}` & game[7] === `${player}` & game[8] === `${player}`) {
-                alert(`${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else if (game[0] === `${player}` & game[3] === `${player}` & game[6] === `${player}`) {
-                alert(`${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else if (game[1] === `${player}` & game[4] === `${player}` & game[7] === `${player}`) {
-                alert(`${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else if (game[2] === `${player}` & game[5] === `${player}` & game[8] === `${player}`) {
-                alert(`${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else if (game[0] === `${player}` & game[3] === `${player}` & game[6] === `${player}`) {
-                alert(`${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else if (game[0] === `${player}` & game[4] === `${player}` & game[8] === `${player}`) {
-                alert(`${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else if (game[2] === `${player}` & game[4] === `${player}` & game[6] === `${player}`) {
-                alert(`${player} is the winner`);
+                ws.emit('gameWin', `${player} is the winner`);
                 break;
             } else {
                 gameArray = [];
@@ -99,5 +104,11 @@
         };
     };
 
+    // Function that displays the grid as the different players play
+    function displayGrid (array) {
+        for (let i = 0; i < array[0].length; i++) {
+            document.querySelector('input[name="' + i +'"]').value = array[0][i];
+        };
+    };
 
 }());
