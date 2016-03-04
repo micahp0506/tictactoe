@@ -30,6 +30,7 @@
   "homepage": "https://github.com/micahp0506/tictactoe#readme",
   "dependencies": {
     "express": "^4.13.4",
-    "jade": "^1.11.0"
+    "jade": "^1.11.0",
+    "socket.io": "^1.4.5"
   }
 }

@@ -3,6 +3,8 @@
 
 const express = require('express');
 const app = express();
+const server = require('http').createServer(app);
+const ws = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3000;
 app.set('view engine', 'jade');
@@ -12,6 +14,10 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
+});
+
+ws.on('connection', socket => {
+    console.log('socket connected', socket.id);
 });

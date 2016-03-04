@@ -14,8 +14,12 @@
     let p8;
     let gameArray = [];
     let player = "";
-
+    const ws = io.connect();
     const form = document.querySelector('form');
+
+    ws.on('connect', (socket) => {
+        console.log('socket connected');
+    });
 
     form.addEventListener('submit', () => {
 
